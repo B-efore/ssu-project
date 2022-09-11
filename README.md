@@ -113,7 +113,111 @@ gcc version 9.4.0
 
 ## 파일처리
 
-개발 환경
+### 과제1
+#### 과제 개요
+파일 I/O 연산 프로그램을 구현한다.
+
+#### 사용법
+``` bash
+// copy.c
+a.out "origin_file_name" "dest_file_name"
+// read.c
+a.out "offset" "byte" "file_name"
+// merge.c
+a.out "file_name1" "file_name2" "file_name3"
+// overwrite.c
+a.out "offset" "data" "file_name"
+// insert.c
+a.out "offset" "data" "file_name"
+// delete.c
+a.out "offset" "byte" "file_name"
+```
+
+|소스코드|설명|
+|---|---|
+|`copy.c`|존재하는 원본 파일로부터 10바이트 단위로 데이터를 읽어 **새로운 복사본 파일을 생성**하는 프로그램|
+|`read.c`|존재하는 원본 파일로부터 `offset`을 기준으로 `byte`의 크기만큼 **데이터를 읽어 화면에 출력**하는 프로그램. `byte`가 음수일 경우 왼쪽의 데이터를, 양수일 경우 오른쪽의 데이터를 읽는다.|
+|`merge.c`|존재하는 **두 개의 파일을 병합해 새로운 파일을 생성**하는 프로그램. 생성된 파일은 두 개의 파일 크기의 합과 일치해야 한다.|
+|`overwrite.c`|존재하는 파일에서 주어진 `offset`부터 시작해 **`data`를 덮어쓰는 프로그램**. EOF를 만나도 중단하지 않고 쓰기를 진행한다.|
+|`insert.c`|존재하는 파일에서 `offset`과 `offset+1` 사이에 **데이터를 삽입**하는 프로그램. `offset`이 파일의 맨 마지막일 경우 append로 처리한다.|
+|`delete.c`|존재하는 파일에서 `offset`을 기준으로 `byte` 크기만큼 **데이터를 삭제**하는 프로그램. `byte`가 음수일 경우 왼쪽의 데이터를, 양수일 경우 오른쪽의 데이터를 삭제한다. 지정한 `byte`만큼의 데이터가 존재하지 않을 경우 존재하는 데이터만 삭제한다. 삭제 후에는 삭제 데이터를 기준으로 전후 데이터가 병합되어야 한다.|
+
+<br>
+
+### 과제2
+#### 과제 개요
+순차읽기 및 랜덤읽기의 디스크 I/O 비용을 측정한다.
+
+#### 사용법
+``` bash
+// create_records.c
+a.out "#record" "record_file_name"
+// seq_read.c
+a.out "record_file_name"
+// rand_read.c
+a.out "record_file_name"
+```
+
+|소스코드|설명|
+|---|---|
+|`create_records.c`|입력된 `file_name` 파일에 학생 레코드를 `#record` 수만큼 반복적으로 저장한다. 학생 레코드의 크기는 200바이트이며 의미없는 데이터로 채워도 상관없다.|
+|`seq_read.c`|`file_name`에 저장된 모든 레코드를 **순차적**으로 **하나씩** 프로그램 상으로 읽어 들이며 걸리는 시간을 출력한다.|
+|`rand_read.c`|`file_name`에 저장된 모든 레코드를 **랜덤**하게 **하나씩** 프로그램 상으로 읽어 들이며 걸리는 시간을 출력한다. *(오류 존재)*|
+
+<br>
+
+### 과제3
+#### 과제 개요
+Flash Memory에서의 Block Mapping FTL을 구현한다.
+
+|소스코드|설명|
+|---|---|
+|`blkmap.h`|flash memory를 구성하는 block, page, sector, spare area 등의 상수 정의와 address mapping table에 대한 구조체 정의|
+|`devicedriver.c`|flash memory에 page 단위로 데이터를 읽고 쓰기 위한 read(), write()함수와 block 데이터를 소거하는 erase()함수 정의|
+|`ftl.c`|FTL 기법을 따르는 ftl_open(), ftl_write(), ftl_read() 함수 구현|
+|`main.c`|file system의 역할을 수행|
+
+<br>
+
+### 과제4
+#### 과제 개요
+레코드를 저장하고 검색한다.
+
+#### 사용법
+``` bash
+// 레코드 추가
+a.out -a record_file_name "field_value1" "field_value2" "field_value3" "field_value4" "field_value5"
+// 레코드 검색
+a.out -s record_file_name "field_name=field_value"
+```
+
+|소스코드|설명|
+|---|---|
+|`student.c`|레코드 구분은 **fixed-length record 방식**을 사용하고, 필드 구분은 **delimiter 방식**을 사용한다. 헤더 레코드가 존재하며 전체 레코드 수를 저장하는 4 바이트 공간과 예약 공간 4 바이트를 갖는다. `-a` 옵션을 사용함과 함께 사용자로부터 학생 레코드에 대한 입력을 받으면 **레코드를 추가**할 수 있다. `-s` 옵션과 함께 레코드 파일명, 필드명, 필드값을 입력받으면 레코드 파일로부터 **입력한 키와 일치하는 레코드를 찾아 전부 출력**한다.|
+|`student.h`|STUDENT 구조체 정의|
+
+<br>
+
+### 과제5
+#### 과제 개요
+과제4의 프로그램에 레코드 삭제와 삽입 기능을 추가한다.
+
+#### 사용법
+``` bash
+// 레코드 삭제
+a.out -d record_file_name "ID=field_value"
+// 레코드 삽입
+a.out -i record_file_name "field_value1" "field_value2" "field_value3" "field_value4" "field_value5"
+```
+
+|소스코드|설명|
+|---|---|
+|`student.c`|레코드 삭제의 경우, `-d` 옵션과 함께 **입력된 키값을 만족하는 레코드들을 검색해 전부 삭제**한다. 레코드의 삭제는 해당 레코드의 첫번째 바이트에 `*`를 저장하는 것으로 처리한다. 삭제 레코드 리스트는 따로 관리되어야 한다. 헤더 레코드의 예약 공간에는 삭제 레코드 리스트의 맨 앞 레코드의 rrn을 이진 정수 형태로 저장한다. 레코드 삽입의 경우, `-i` 옵션과 함께 입력된 값들을 **하나의 레코드로 삽입**한다. 삭제 레코드가 존재할 시, 삭제 레코드 리스트의 맨 앞 레코드 공간에 삽입하고 삭제 레코드 리스트를 수정한다.|
+|`student.h`||
+
+<br>
+
+### 개발 환경
 ```
 Linux Ubuntu-18.04-desktop
 gcc version 7.5
@@ -121,7 +225,7 @@ gcc version 7.5
 
 ## 프로그래밍언어
 
-개발 환경
+### 개발 환경
 ```
 Linux Ubuntu-20.04.4-desktop
 gcc version 9.4.0
