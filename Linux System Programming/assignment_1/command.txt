@@ -1,0 +1,11 @@
+Usage:
+  > find [FILENAME] [PATH]
+ 	 >> [INDEX] [OPTION ...]
+  > help
+  > exit
+
+  [OPTION ...]
+   q : report only when files differ
+   s : report when two files are the same
+   i : ignore case differences in file contents
+   r : recursively compare any subdirectories found
